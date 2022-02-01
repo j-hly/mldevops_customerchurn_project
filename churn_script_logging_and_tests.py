@@ -13,7 +13,7 @@ def test_import(import_data):
 	test data import - this example is completed for you to assist with the other test functions
 	'''
 	try:
-		df = import_data("./data/bank_data.csv")
+		df = import_data(r"./data/bank_data.csv")
 		logging.info("Testing import_data: SUCCESS")
 	except FileNotFoundError as err:
 		logging.error("Testing import_eda: The file wasn't found")
@@ -31,6 +31,7 @@ def test_eda(perform_eda):
 	'''
 	test perform eda function
 	'''
+	
 
 
 def test_encoder_helper(encoder_helper):
