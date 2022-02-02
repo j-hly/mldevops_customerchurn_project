@@ -41,7 +41,6 @@ def test_encoder_helper():
 		model = churn_library.Model("unittest")
 		model.import_data(constants.path_rawdata)
 		df = model.get_df_raw()
-		df.drop(['Gender'], axis=1, inplace=True)
 		# check that df has all the columns required for econding
 		assert set(constants.cat_columns).issubset(df.columns), "Some categorical columns are missing!"
 		logging.info("    All categtorical columns are in!")
