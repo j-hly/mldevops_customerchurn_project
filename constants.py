@@ -1,8 +1,9 @@
 # Paths
-data_default_path = r"./data/bank_data.csv"
-eda_folder_path = r"./images/eda/"
-classification_folder_path = r"./images/"
-model_folder_path = r"./models/"
+path_rawdata = r"./data/bank_data.csv"
+path_eda = r"./images/eda/"
+path_results = r"./images/results/"
+path_model = r"./models/"
+path_logs = r"|./logs/"
 
 # Features
 cat_columns = [

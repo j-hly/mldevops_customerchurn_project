@@ -108,7 +108,7 @@ class Model:
                 histogram_cols:str=constants.eda_histogram_columns, 
                 value_count_cols:str=constants.eda_valcount_columns,
                 displot_cols:str=constants.eda_distplot_columns,
-                output_folder:str=constants.eda_folder_path):
+                output_folder:str=constants.path_eda):
                 """Perform EDA on columns and output to folders
 
                 Args:
@@ -194,11 +194,11 @@ class Model:
                 self.lrc.fit(self.X_train, self.y_train)
 
                 # store models
-                rfcpath = f"{constants.model_folder_path}rfc_model_v{self.version}.pkl"
+                rfcpath = f"{constants.path_model}rfc_model_v{self.version}.pkl"
                 print(f"Saving RFC model to {rfcpath}...")
                 joblib.dump(self.rfc, rfcpath)
                 
-                lrcpath = f"{constants.model_folder_path}lrc_model_v{self.version}.pkl"
+                lrcpath = f"{constants.path_model}lrc_model_v{self.version}.pkl"
                 print(f"Saving LRC model to {lrcpath}...")
                 joblib.dump(self.lrc, lrcpath)
                 return
@@ -221,7 +221,7 @@ class Model:
         
         @staticmethod
         def output_report(y: pd.Series, y_preds: pd.Series, 
-                title: str, filename: str, output_folder: str=constants.classification_folder_path) -> None:
+                title: str, filename: str, output_folder: str=constants.path_results) -> None:
                 """Output image of classification report based on y and y_predctions
 
                 Args:
@@ -237,7 +237,7 @@ class Model:
                 {'fontsize': 10}, fontproperties = 'monospace')
                 plt.axis('off')
                 plt.savefig(f"{output_folder}{filename}")
-                plt.show()
+                plt.close()
                 return
 
         def classification_report_image(self) -> None:
@@ -256,10 +256,10 @@ class Model:
                 for model_name, preds in reports.items():
                         for train_test, pred in preds.items():
                                 self.output_report(y[train_test], pred, model_name + " " + train_test,
-                                model_name.lower().replace(' ','_') + train_test + ".png")
+                                model_name.lower().replace(' ','_') + "_" + train_test + "_v" + self.version + ".png")
 
 
-        def feature_importance_plot(self, output_path: str) -> None:
+        def feature_importance_plot(self, output_path: str=constants.path_results) -> None:
                 '''
                 creates and stores the feature importances in pth
                 input:
@@ -289,6 +289,7 @@ class Model:
                 # Add feature names as x-axis labels
                 plt.xticks(range(self._X.shape[1]), names, rotation=90)
                 plt.savefig('feature_importance.png')
+                plt.close()
                 return
 
         def load_saved_model(self, path: str, classifier: str) -> None:
@@ -305,11 +306,19 @@ class Model:
                 else:
                         print("classifier must be either rfc for Random Forest or lrc for Logit!")
 
+        
+        def get_df_raw(self) -> pd.DataFrame:
+                """getter for df_raw"""
+                return self._df_raw
+        
+        def get_df_cleaned(self) -> pd.DataFrame:
+                """getter for df_cleaned"""
+                return self._df_cleaned
 
 
 if __name__ == '__main__':
         model = Model('1.0')
-        model.import_data(constants.data_default_path)
+        model.import_data(constants.path_rawdata)
         model.process_df()
         model.perform_eda()
         model.perform_feature_engineering()
